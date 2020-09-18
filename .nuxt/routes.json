@@ -1,0 +1,16 @@
+[
+  {
+    "name": "original",
+    "path": "/original",
+    "component": "/Users/alexpi/Developer/Get My Grades Task/getmygrades/pages/original.vue",
+    "chunkName": "pages/original",
+    "_name": "_ca8eb410"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Users/alexpi/Developer/Get My Grades Task/getmygrades/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_6aa03abb"
+  }
+]
