@@ -2,6 +2,8 @@
 
 > Technical Task
 
+[Online Demo](https://ap-getmygrades-01.web.app)
+
 ## Build Setup
 
 ```bash
