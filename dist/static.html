@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <meta name="description" content="Technical Task from Get My Grades">
+  <meta name="author" content="A.Pilugins">
+  <link rel="icon" href="">
+
+  <title>A.Pilugin's Technical Task</title>
+
+  <!-- Vue production version -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue"></script>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <style>
+    * {
+      box-sizing: border-box;
+      position: relative;
+      font-family: "Roboto", arial, sans-serif;
+    }
+
+    *:focus {
+      outline: none;
+    }
+
+    textarea:focus,
+    input:focus {
+      outline: none;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    /* For desktop: */
+    .col-1 {
+      width: 8.33%;
+    }
+
+    .col-2 {
+      width: 16.66%;
+    }
+
+    .col-3 {
+      width: 25%;
+    }
+
+    .col-4 {
+      width: 33.33%;
+    }
+
+    .col-5 {
+      width: 41.66%;
+    }
+
+    .col-6 {
+      width: 50%;
+    }
+
+    .col-7 {
+      width: 58.33%;
+    }
+
+    .col-8 {
+      width: 66.66%;
+    }
+
+    .col-9 {
+      width: 75%;
+    }
+
+    .col-10 {
+      width: 83.33%;
+    }
+
+    .col-11 {
+      width: 91.66%;
+    }
+
+    .col-12 {
+      width: 100%;
+    }
+
+    .flex-rows-break {
+      flex-basis: 100%;
+      height: 0;
+      margin: 0;
+      margin-bottom: 2%;
+    }
+
+    .app {
+      margin-left: auto;
+      margin-right: auto;
+      width: 90%;
+    }
+
+    .flex-content {
+      display: flex;
+      width: 100%;
+    }
+
+    .container {
+      display: flex;
+      /* or inline-flex */
+      flex-wrap: wrap;
+      align-items: stretch;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .card {
+      flex: 1 0 0;
+      /* background-color: #2DA4F2; */
+      /* border-radius: 10px; */
+      margin: 5px;
+      padding: 5px 10px;
+      box-sizing: border-box;
+    }
+
+    .card:not(:first-of-type):after {
+      content: " ";
+      position: absolute;
+      border-left: 1px dotted gray;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }
+
+    .seats-field,
+    .trim-field,
+    .wheel-field,
+    .paint-field,
+    .extras-field,
+    .convertible-field {
+      display: flex;
+      /* or inline-flex */
+      flex-wrap: wrap;
+    }
+
+    .seat {
+      padding: 10px 5px;
+      margin: 5px;
+      width: 42px;
+      border: 1px solid gray;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    h2.car-name {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    h4.subtitle {
+      display: inline-block;
+      padding: 6px 10px;
+      padding-top: 15px;
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .bg {
+      background: url(https://alexpi-vue.s3-eu-west-1.amazonaws.com/src-examples/car-icons-optim.svg) no-repeat top left;
+    }
+
+    .seats-header,
+    .trim-header,
+    .wheel-header,
+    .paint-header,
+    .extras-header,
+    .convertible-header {
+      background-size: 200px;
+      width: 35px;
+      height: 100%;
+      float: left;
+    }
+
+    .seats-header {
+      background-position: 0 10px;
+    }
+
+    .trim-header {
+      background-position: -65px 10px;
+    }
+
+    .wheel-header {
+      background-position: -130px 10px;
+    }
+
+    .paint-header {
+      background-position: -95px 10px;
+    }
+
+    .extras-header {
+      background-position: -163px 10px;
+    }
+
+    .convertible-header {
+      background-position: -31px 10px;
+    }
+
+    ul {
+      list-style-type: none;
+      width: 100%;
+    }
+
+    td.price-col {
+      width: 98px;
+      padding-left: 6px;
+    }
+
+    .clear-hr {
+      float: left;
+      clear: both;
+    }
+
+    table.data-table {
+      border-collapse: collapse;
+      table-layout: auto;
+      /*fixed;*/
+      border: 1px solid #236655;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #236655;
+    }
+
+    table.data-table>thead {
+      background: #236655;
+      color: white;
+    }
+
+    .th-clickable:hover {
+      background: #005184;
+      cursor: pointer;
+    }
+
+    table.data-table>thead>th {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    table.data-table>thead>th:first-child {
+      border-left: none;
+    }
+
+    table.data-table .index {
+      width: 70px;
+    }
+
+    table.data-table>tbody>tr:nth-child(odd) {
+      background-color: #fafafa !important;
+    }
+
+    table.data-table>tbody>tr:nth-child(even) {
+      background-color: #eee !important;
+    }
+
+    table.data-table td,
+    table.data-table th {
+      border: 1px solid white;
+      padding: 3px 5px;
+    }
+
+    table.info {
+      border-collapse: collapse;
+      table-layout: auto;
+      /*fixed;*/
+      width: 95%;
+      margin: 5px;
+    }
+
+    table.info td {
+      padding: 5px 0px;
+      border: 0 none;
+    }
+
+    td.filter-value {
+      padding: 5px 10px;
+      border: 1px solid gray;
+      text-align: center;
+      border-radius: 5px;
+    }
+
+    td.filter-value:hover {
+      background: #236655;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media only screen and (min-width: 840px) {
+      .tbl-col-1 {
+        width: 120px;
+      }
+
+      .tbl-col-2 {
+        width: 80px;
+      }
+
+      .tbl-col-3 {
+        width: 270px;
+      }
+    }
+
+    @media only screen and (max-width: 840px) {
+
+      /* For mobile phones: */
+      [class*="col-"] {
+        width: 100%;
+      }
+
+      .app {
+        width: 100%;
+        padding: 10px;
+      }
+
+      .container {
+        flex-direction: column;
+        align-content: center;
+      }
+
+      .card:not(:first-of-type):after {
+        content: " ";
+        border-style: hidden;
+        border-left-color: transparent;
+      }
+    }
+
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact !important;
+      }
+
+      .not-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h2 class="title">A.Pilugin's Technical Task</h2>
+  <div id="app"></div>
+
+  <!-- "car-table" template -->
+  <template id="car-table-template" hidden v-cloak>
+    <div>
+      <table class="filters">
+        <tbody>
+          <tr>
+            <td><b>Names:</b></td>
+            <td class="filter-value"><b>Show All</b></td>
+            <td v-for="(name, index) in filters.names" :key="'fname-'+index" class="filter-value">
+              {{ name }}
+            </td>
+          </tr>
+          <tr>
+            <td><b>Convertible:</b></td>
+            <td v-for="(conv, index) in filters.convertibles" :key="'fconv-'+index" class="filter-value">
+              {{ conv }}
+            </td>
+          </tr>
+          <tr>
+            <td><b>Seats:</b></td>
+            <td v-for="(seat, index) in filters.seats" :key="'fseat-'+index" class="filter-value">
+              {{ seat }}
+            </td>
+          </tr>
+          <tr>
+            <td><b>Trim Levels:</b></td>
+            <td v-for="(trim, index) in filters.trimLevels" :key="'ftrim-'+index" class="filter-value">
+              {{ trim }}
+            </td>
+          </tr>
+          <tr>
+            <td><b>Wheels:</b></td>
+            <td v-for="(wheel, index) in filters.wheels" :key="'fwheel-'+index" class="filter-value">
+              {{ wheel }}
+            </td>
+          </tr>
+          <tr>
+            <td><b>Paint:</b></td>
+            <td v-for="(paint, index) in filters.paints" :key="'fpaint-'+index" class="filter-value">
+              {{ paint }}
+            </td>
+          </tr>
+          <tr>
+            <td><b>Extras:</b></td>
+            <td v-for="(ext, index) in filters.extras" :key="'fext-'+index" class="filter-value">
+              {{ ext }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table :class="tableClass" style="width:100%">
+        <thead v-show="!hideTitles">
+          <tr>
+            <th v-if="showCounter" class="index">&nbsp</th>
+            <th v-for="(header, index) in colTitles" :key="'th-'+index" :class="'thd th-clickable tbl-col-'+index"
+              :ref="'header'+index" @click="showFilter(index)">
+              {{ getColHeader(index) }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in rows" :key="'tr-'+index" class="car-info">
+            <td v-if="showCounter" class="index">{{index+1}}</td>
+            <td v-for="(col, colIndex) in colTitles" :key="'td-'+colIndex" v-html="getCellValue(index, colIndex)"
+              class="tdd">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </template>
+
+  <!-- "item-list" template -->
+  <template id="item-list-template" hidden v-cloak>
+    <ul v-if="values && values.length" class="items">
+      <li v-for="(item, index) in values" :key="`item-${index}`">
+        <table style="width:100%">
+          <tr>
+            <td>
+              <span class="item-name">{{item.name}}</span>
+            </td>
+            <td class="price-col">
+              <span class="item-name">{{ currencyFormat(item.price) }}</span>
+            </td>
+          </tr>
+        </table>
+      </li>
+    </ul>
+  </template>
+
+  <!-- "cars-template" template -->
+  <template id="cars-template" hidden v-cloak>
+    <div class="container">
+      <div v-for="(car, index) in cars" :key="`car-${index}`" class="card">
+        <h2 class="car-name">
+          {{ car.name }}
+        </h2>
+
+        <!-- Convertible --->
+        <div v-if="car.convertible" class="convertible-field">
+          <div>
+            <div class="bg convertible-header"></div>
+            <h4 class="subtitle">Convertible</h4>
+          </div>
+        </div>
+
+        <!-- Seats --->
+        <div class="seats-field">
+          <div>
+            <div class="bg seats-header"></div>
+            <h4 class="subtitle">Seats:</h4>
+          </div>
+          <div class="seat" :style="indent(0)">
+            {{ car.seats }}
+          </div>
+        </div>
+
+        <!-- trim_levels --->
+        <div class="trim-field">
+          <div>
+            <div class="bg trim-header"></div>
+            <h4 class="subtitle">Trim Levels:</h4>
+          </div>
+          <div class="flex-rows-break"></div>
+          <item-list v-bind:values="car.trim_levels"></item-list>
+        </div>
+
+        <!-- wheels -->
+        <div class="wheel-field">
+          <div>
+            <div class="bg wheel-header"></div>
+            <h4 class="subtitle">Wheels:</h4>
+          </div>
+          <div class="flex-rows-break"></div>
+          <item-list v-bind:values="car.wheels"></item-list>
+        </div>
+
+        <!-- paint -->
+        <div class="paint-field">
+          <div>
+            <div class="bg paint-header"></div>
+            <h4 class="subtitle">Paint:</h4>
+          </div>
+          <div class="flex-rows-break"></div>
+          <item-list v-bind:values="car.paint"></item-list>
+        </div>
+
+        <!-- extras -->
+        <div class="extras-field">
+          <div>
+            <div class="bg extras-header"></div>
+            <h4 class="subtitle">Extras:</h4>
+          </div>
+          <div class="flex-rows-break"></div>
+          <item-list v-bind:values="car.extras"></item-list>
+        </div>
+
+      </div>
+    </div>
+  </template>
+
+  <!-- "app" (root instance) template -->
+  <template id="app-template" hidden v-cloak>
+    <div class="app">
+      <car-table :values="carInfo" :ready="isReady"></car-table>
+      <div class="clear-hr"></div>
+      <div class="flex-content">
+        <cars :values="carInfo" :ready="isReady"></cars>
+      </div>
+    </div>
+  </template>
+
+  <script>
+
+    window.eventBus = new Vue({});
+
+    Vue.component('car-table', {
+      template: '#car-table-template',
+      props: {
+        values: {
+          type: Array,
+          default: function () { return [] } //ES6: default: () => []
+        },
+        ready: {
+          type: Boolean,
+          default: false
+        }
+      },
+      data: function () {
+        return {
+          tableClass: "data-table",
+          showCounter: false,
+          hideTitles: false,
+          colTitles: [
+            "Name",
+            "Convertible",
+            "Seats",
+            "Trim Levels",
+            "Wheels",
+            "Paint",
+            "Extras"
+          ],
+          rows: [],
+          sorted: [],
+          filtered: [],
+          filters: {
+            names: [],
+            convertibles: [],
+            seats: [],
+            trimLevels: [],
+            wheels: [],
+            paints: [],
+            extras: []
+          }
+        }
+      },
+      created: function () {
+        var self = this;
+        window.eventBus.$on("received", payload => {
+          self.rows = payload;
+          self.filtered = payload;
+          self.generateFilters();
+          this.$forceUpdate();
+        });
+      },
+      watch: {
+        values: function (newValues) {
+          this.updateData();
+          this.$forceUpdate();
+        },
+      },
+      methods: {
+        generateFilters: function () {
+          if (this.rows && this.rows.length > 0) {
+            var names = [];
+            var seats = [];
+            var convertibles = [];
+            var trimLevels = [];
+            var wheels = [];
+            var paints = [];
+            var extras = [];
+            for (var i = 0; i < this.rows.length; i++) {
+              var row = this.rows[i];
+              names.push(row.name);
+              seats.push(row.seats);
+              row.convertible ? convertibles.push("convertible") : convertibles.push("not");
+              var trims = row.trim_levels;
+              for (var j = 0; j < trims.length; j++) {
+                trimLevels.push(this.currencyFormat(trims[j].price));
+              }
+              var twheels = row.wheels;
+              for (var j = 0; j < twheels.length; j++) {
+                wheels.push(this.currencyFormat(twheels[j].price));
+              }
+              var paint = row.paint;
+              for (var j = 0; j < paint.length; j++) {
+                paints.push(this.currencyFormat(paint[j].price));
+              }
+              var extr = row.extras;
+              for (var j = 0; j < extr.length; j++) {
+                extras.push(this.currencyFormat(extr[j].price));
+              }
+            }
+            this.filters.names = names.filter(this.onlyUniqueInArray).sort();
+            this.filters.seats = seats.filter(this.onlyUniqueInArray).sort();
+            this.filters.convertibles = convertibles.filter(this.onlyUniqueInArray).sort();
+            this.filters.trimLevels = trimLevels.filter(this.onlyUniqueInArray).sort();
+            this.filters.wheels = wheels.filter(this.onlyUniqueInArray).sort();
+            this.filters.paints = paints.filter(this.onlyUniqueInArray).sort();
+            this.filters.extras = extras.filter(this.onlyUniqueInArray).sort();
+
+            console.log("FILTERED:");
+            console.log(this.filters);
+
+          }
+        },
+        onlyUniqueInArray: function (value, index, self) {
+          return self.indexOf(value) === index;
+        },
+        currencyFormat: function (num) {
+          return '$' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        },
+        updateData: function () {
+          if (this.values) {
+            this.rows = this.values.slice(); //clone: [...this.values]
+            this.filtered = this.values.slice();
+          }
+        },
+        getColHeader: function (colIndex) {
+          if (this.colTitles && this.colTitles.length > 0) {
+            return this.colTitles[colIndex];
+          }
+        },
+        getCellValue: function (rowIndex, colIndex) {
+          if (this.rows && this.rows.length > 0) {
+            var row = this.rows[rowIndex];
+            if (colIndex == 0) return row.name;
+            if (colIndex == 1) return row.convertible ? "convertible" : "";
+            if (colIndex == 2) return row.seats;
+            if (colIndex == 3) {
+              var tbl = '<table class="info">';
+              var trimLevels = row.trim_levels;
+              for (var i = 0; i < trimLevels.length; i++) {
+                tbl += "<tr><td>" + trimLevels[i].name + "</td><td>" + this.currencyFormat(trimLevels[i].price) + "</td></tr>";
+              }
+              tbl += '</table>';
+              return tbl;
+            }
+            if (colIndex == 4) {
+              var tbl = '<table class="info">';
+              var wheels = row.wheels;
+              for (var i = 0; i < wheels.length; i++) {
+                tbl += "<tr><td>" + wheels[i].name + "</td><td>" + this.currencyFormat(wheels[i].price) + "</td></tr>";
+              }
+              tbl += '</table>';
+              return tbl;
+            }
+            if (colIndex == 5) {
+              var tbl = '<table class="info">';
+              var paint = row.paint;
+              for (var i = 0; i < paint.length; i++) {
+                tbl += "<tr><td>" + paint[i].name + "</td><td>" + this.currencyFormat(paint[i].price) + "</td></tr>";
+              }
+              tbl += '</table>';
+              return tbl;
+            }
+            if (colIndex == 6) {
+              var tbl = '<table class="info">';
+              var extras = row.extras;
+              for (var i = 0; i < extras.length; i++) {
+                tbl += "<tr><td>" + extras[i].name + "</td><td>" + this.currencyFormat(extras[i].price) + "</td></tr>";
+              }
+              tbl += '</table>';
+              return tbl;
+            }
+
+            let cellValue = this.rows[rowIndex][colIndex];
+            console.log(cellValue);
+            return "test";
+          }
+        },
+        sortCol: function (colIndex) {
+          if (this.rows && this.rows.length > 0) {
+            if (colIndex == 2) {
+              this.rows = this.rows.sort((a, b) => {
+                if (a.seats < b.seats) return (a.seats < b.seats) ? -1 : 1;
+                if (a.seats > b.seats) return (a.seats > b.seats) ? 1 : -1;
+                return 0;
+              });
+            }
+          }
+        },
+        showFilter: function (colIndex) {
+          var refId = "header" + colIndex;
+          var header = this.$refs[refId];
+          var headerWidth = header.clientWidth;
+          console.log(headerWidth);
+        }
+      }
+    })
+
+    Vue.component('item-list', {
+      template: '#item-list-template',
+      props: {
+        values: {
+          type: Array,
+          default: function () { return [] } //ES6: default: () => []
+        }
+      },
+      methods: {
+        currencyFormat: function (num) {
+          return '$' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
+      }
+    })
+
+    /* "Cars" component */
+    Vue.component('cars', {
+      template: '#cars-template',
+      props: {
+        values: {
+          type: Array,
+          default: function () { return [] } //ES6: default: () => []
+        },
+        ready: {
+          type: Boolean,
+          default: false
+        }
+      },
+      data: function () {
+        return {
+          cars: null
+        }
+      },
+      created: function () {
+        var self = this;
+        window.eventBus.$on("received", payload => {
+          self.cars = payload;
+          this.$forceUpdate();
+        });
+      },
+      methods: {
+        indent: function (step) {
+          var v = step >= 1 ? step : 0;
+          return { transform: `translate(${v * 10}px)` };
+        }
+      }
+    })
+
+    /* The Root instance (Renderer) */
+    var app = new Vue({
+      el: '#app',
+      template: '#app-template',
+      data: function () {
+        return {
+          carInfo: null,
+          isReady: false
+        }
+      },
+      mounted: function () {
+        axios
+          .get('https://demo-api.getmygrades.co.uk/cars')
+          .then(function (response) {
+            this.carInfo = response.data;
+            console.log(this.carInfo);
+            window.eventBus.$emit("received", this.carInfo);
+          })
+          .catch(err => console.error(err))
+      }
+    })
+
+    Vue.config.devtools = false;
+    Vue.config.productionTip = false;
+  </script>
+
+</html>

@@ -6,6 +6,7 @@
 
         <v-toolbar color="indigo" dark>
           <v-row justify="space-between">
+            <v-spacer />
             <v-btn-toggle v-model="text" tile color="green accent-3" group>
               <v-btn
                 v-for="(car, index) in cars"
@@ -14,14 +15,15 @@
                 @click="selectCar(index)"
               >
                 <v-icon left dark>mdi-car</v-icon>
-                {{car.name}}
-              </v-btn>
+                <span class="hidden-md-and-down">{{car.name}}</span>
+              </v-btn>              
               <!--
               <v-btn class="ma-2" @click="resetSelection()">
                 <v-icon left dark>mdi-close</v-icon>Deselect
               </v-btn>
               -->
             </v-btn-toggle>
+            <v-spacer />
           </v-row>
         </v-toolbar>
 
@@ -39,29 +41,31 @@
           </v-row>
 
           <v-row justify="space-between" style="background:#546E7A" class="boxshadow">
-            <v-col xs12>
+            <v-col xs12 justify="space-between">
+              <v-spacer />
               <v-btn-toggle v-model="property" tile class="property" color="lime accent-3" group>
                 <v-btn class="text-left property" @click="showTrimLevels()">
                   <v-icon left dark>mdi-seal</v-icon>
-                  <span>Trim Levels</span>
+                  <span class="hidden-md-and-down">Trim Levels</span>
                   <v-spacer />
                 </v-btn>
                 <v-btn class="text-left property" @click="showWheels()">
                   <v-icon left dark>mdi-adjust</v-icon>
-                  <span>Wheels</span>
+                  <span class="hidden-md-and-down">Wheels</span>
                   <v-spacer />
                 </v-btn>
                 <v-btn class="text-left property" @click="showPaints()">
                   <v-icon left dark>mdi-format-paint</v-icon>
-                  <span>Paint</span>
+                  <span class="hidden-md-and-down">Paint</span>
                   <v-spacer />
                 </v-btn>
                 <v-btn class="text-left property" @click="showExtras()">
                   <v-icon left dark>mdi-playlist-plus</v-icon>
-                  <span>Extras</span>
+                  <span class="hidden-md-and-down">Extras</span>
                   <v-spacer />
                 </v-btn>
               </v-btn-toggle>
+              <v-spacer />
             </v-col>
           </v-row>
 
@@ -72,6 +76,7 @@
                 <!-- Trim Levels -->
                 <v-row justify="space-between" v-if="showOptions == 'trim'">
                   <v-col xs12>
+                    <h3 class="pl-0 mb-3">Trim Levels</h3>
                     <v-btn
                       block
                       class="text-left mb-3"
@@ -89,6 +94,7 @@
                 <!-- Wheels -->
                 <v-row justify="space-between" v-if="showOptions == 'wheels'">
                   <v-col xs12>
+                    <h3 class="pl-0 mb-3">Wheels</h3>
                     <v-btn
                       block
                       class="text-left mb-3"
@@ -106,6 +112,7 @@
                 <!-- Paint -->
                 <v-row justify="space-between" v-if="showOptions == 'paint'">
                   <v-col xs12>
+                    <h3 class="pl-0 mb-3">Paint</h3>
                     <v-btn
                       block
                       class="text-left mb-3"
@@ -120,9 +127,10 @@
                   </v-col>
                 </v-row>
 
-                <!-- Paint -->
+                <!-- Extras -->
                 <v-row justify="space-between" v-if="showOptions == 'extras'">
                   <v-col xs12>
+                    <h3 class="pl-0 mb-3">Extras</h3>
                     <v-btn
                       block
                       class="text-left mb-3"
