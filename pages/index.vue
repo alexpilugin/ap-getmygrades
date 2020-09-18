@@ -1,7 +1,7 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
-      <v-card class="mx-auto" v-if="cars && cars.length > 0">
+      <v-card class="mx-auto d-flex flex-column" v-if="cars && cars.length > 0">
         <v-system-bar color="indigo darken-2" dark>Cars</v-system-bar>
 
         <v-toolbar color="indigo" dark>
@@ -16,7 +16,7 @@
               >
                 <v-icon left dark>mdi-car</v-icon>
                 <span class="hidden-md-and-down">{{car.name}}</span>
-              </v-btn>              
+              </v-btn>
               <!--
               <v-btn class="ma-2" @click="resetSelection()">
                 <v-icon left dark>mdi-close</v-icon>Deselect
@@ -28,6 +28,7 @@
         </v-toolbar>
 
         <v-container v-if="selectedCar" fluid class="pt-0">
+          <!--
           <v-row justify="space-between" style="background:#37474F">
             <v-col xs12>
               <v-container fluid>
@@ -39,6 +40,7 @@
               </v-container>
             </v-col>
           </v-row>
+          -->
 
           <v-row justify="space-between" style="background:#546E7A" class="boxshadow">
             <v-col xs12 justify="space-between">
@@ -82,9 +84,9 @@
                       class="text-left mb-3"
                       v-for="(trim, index) in getTrimLevels(selection.index)"
                       :key="'trim-'+index"
-                      @click="selectTrimLevel(trim.name)"
+                      @click="selectTrimLevel(trim)"
                     >
-                      <span>{{trim.name}}</span> 
+                      <span>{{trim.name}}</span>
                       <v-spacer />
                       <span>{{ currencyFormat(trim.price) }}</span>
                     </v-btn>
@@ -100,7 +102,7 @@
                       class="text-left mb-3"
                       v-for="(wheel, index) in getWheels(selection.index)"
                       :key="'whell-'+index"
-                      @click="selectWheel(wheel.name)"
+                      @click="selectWheel(wheel)"
                     >
                       <span>{{wheel.name}}</span>
                       <v-spacer />
@@ -118,7 +120,7 @@
                       class="text-left mb-3"
                       v-for="(paint, index) in getPaint(selection.index)"
                       :key="'paint-'+index"
-                      @click="selectPaint(paint.name)"
+                      @click="selectPaint(paint)"
                     >
                       <span>{{paint.name}}</span>
                       <v-spacer />
@@ -136,7 +138,7 @@
                       class="text-left mb-3"
                       v-for="(extra, index) in getExtras(selection.index)"
                       :key="'extra-'+index"
-                      @click="selectExtras(extra.name)"
+                      @click="selectExtras(extra)"
                     >
                       <span>{{extra.name}}</span>
                       <v-spacer />
@@ -148,6 +150,121 @@
             </v-col>
           </v-row>
         </v-container>
+
+        <!-- Basket -->
+        <v-card-actions style="background:#37474F">
+          <v-col>
+            
+            <!-- Selected Car -->
+            <v-row v-if="selectedCar">
+              <v-flex xs10>
+                <v-container fluid>
+                  <div>
+                    <v-icon dark>mdi-car</v-icon>
+                    <span class="pl-5">
+                      <b>{{selection.name}}</b>
+                    </span>
+                    <span class="pl-5 hidden-md-and-down">Seats: {{selection.seats}}</span>
+                    <span class="pl-5 hidden-md-and-down">{{ selection.convertible ? "convertible" : "" }}</span>
+                    </div>
+                </v-container>
+              </v-flex>
+
+              <v-flex xs2>
+                <v-btn icon @click="resetSelection()">
+                  <v-icon dark>mdi-delete-circle-outline</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-row>
+
+            <!-- Selected Trim Levels -->
+            <v-row v-if="selection.trimLevels" class="top-border">
+              <v-flex xs10>
+                <v-container fluid>
+                  <div>
+                     <v-icon left dark>mdi-seal</v-icon>
+                      <span class="pl-5 hidden-md-and-down">{{selection.trimLevels}}</span>
+                      <span class="pl-5">{{ currencyFormat(selection.trimLevelsPrice) }}</span>
+                    </div>
+                </v-container>
+              </v-flex>
+
+              <v-flex xs2>
+                <v-btn icon @click="removeSelectedTrimLevels()">
+                  <v-icon dark>mdi-delete-circle-outline</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-row>
+
+            <!-- Selected Wheels -->
+            <v-row v-if="selection.wheels" class="top-border">
+              <v-flex xs10>
+                <v-container fluid>
+                  <div>
+                    <v-icon left dark>mdi-adjust</v-icon>
+                      <span class="pl-5 hidden-md-and-down">{{ selection.wheels }}</span>
+                      <span class="pl-5">{{ currencyFormat(selection.wheelsPrice) }}</span>
+                    </div>
+                </v-container>
+              </v-flex>
+
+              <v-flex xs2>
+                <v-btn icon @click="removeSelectedWheels()">
+                  <v-icon dark>mdi-delete-circle-outline</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-row>
+
+            <!-- Selected Paint -->
+            <v-row v-if="selection.paint" class="top-border">
+              <v-flex xs10>
+                <v-container fluid>
+                  <div>
+                    <v-icon left dark>mdi-format-paint</v-icon>
+                      <span class="pl-5 hidden-md-and-down">{{ selection.paint }}</span>
+                      <span class="pl-5">{{ currencyFormat(selection.paintPrice) }}</span>
+                    </div>
+                </v-container>
+              </v-flex>
+
+              <v-flex xs2>
+                <v-btn icon @click="removeSelectedPaint()">
+                  <v-icon dark>mdi-delete-circle-outline</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-row>
+
+            <!-- Selected Extras -->
+            <v-row v-if="selection.extras" class="top-border">
+              <v-flex xs10>
+                <v-container fluid>
+                  <div>
+                    <v-icon left dark>mdi-playlist-plus</v-icon>
+                    <span class="pl-5 hidden-md-and-down">{{ selection.extras }}</span>
+                    <span class="pl-5">{{ currencyFormat(selection.extrasPrice) }}</span>
+                    </div>
+                </v-container>
+              </v-flex>
+
+              <v-flex xs2>
+                <v-btn icon @click="removeSelectedExtras()">
+                  <v-icon dark>mdi-delete-circle-outline</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-row>
+
+            <!-- Total Price -->
+            <v-row v-if="selectedCar" class="top-border">
+              <v-flex xs8>
+                <h2 class="pl-5">Total:</h2>
+              </v-flex>
+              <v-flex xs4>
+                <h2>{{ totalPrice }}</h2>
+              </v-flex>
+            </v-row>
+          </v-col>
+        </v-card-actions>
+
       </v-card>
     </v-flex>
   </v-layout>
@@ -176,6 +293,10 @@ export default {
         wheels: undefined,
         paint: undefined,
         extras: undefined,
+        trimLevelsPrice: 0,
+        wheelsPrice: 0,
+        paintPrice: 0,
+        extrasPrice: 0
       },
       showOptions: undefined,
     };
@@ -190,6 +311,13 @@ export default {
       getPaint: "interface/getPaint",
       getExtras: "interface/getExtras",
     }),
+    totalPrice() {
+      var total = this.selection.trimLevelsPrice 
+                      + this.selection.wheelsPrice 
+                      + this.selection.paintPrice 
+                      + this.selection.extrasPrice;
+      return this.currencyFormat(total);
+    }
   },
   methods: {
     selectCar(index) {
@@ -215,6 +343,10 @@ export default {
         wheels: undefined,
         paint: undefined,
         extras: undefined,
+        trimLevelsPrice: 0,
+        wheelsPrice: 0,
+        paintPrice: 0,
+        extrasPrice: 0
       };
     },
     resetOptions() {
@@ -222,6 +354,22 @@ export default {
       this.selection.wheels = undefined;
       this.selection.paint = undefined;
       this.selection.extras = undefined;
+    },
+    removeSelectedTrimLevels() {
+      this.selection.trimLevels = undefined;
+      this.selection.trimLevelsPrice = 0;
+    },
+    removeSelectedWheels() {
+      this.selection.wheels = undefined;
+      this.selection.wheelsPrice = 0;
+    },
+    removeSelectedPaint() {
+      this.selection.paint = undefined;
+      this.selection.paintPrice = 0;
+    },
+    removeSelectedExtras() {
+      this.selection.extras = undefined;
+      this.selection.extrasPrice = 0;
     },
     showTrimLevels() {
       this.showOptions == "trim"
@@ -247,17 +395,21 @@ export default {
         : (this.showOptions = "extras");
       if (!this.showOptions) this.resetOptions();
     },
-    selectTrimLevel(name) {
-      this.selection.trimLevels == name;
+    selectTrimLevel(item) {
+      this.selection.trimLevels = item.name;
+      this.selection.trimLevelsPrice = item.price;
     },
-    selectWheel(name) {
-      this.selection.wheels == name;
+    selectWheel(item) {
+      this.selection.wheels = item.name;
+      this.selection.wheelsPrice = item.price;
     },
-    selectPaint(name) {
-      this.selection.paint == name;
+    selectPaint(item) {
+      this.selection.paint = item.name;
+      this.selection.paintPrice = item.price;
     },
-    selectExtras(name) {
-      this.selection.extras == name;
+    selectExtras(item) {
+      this.selection.extras = item.name;
+      this.selection.extrasPrice = item.price;
     },
     carNameBtnClass(index) {
       let className = "ma-2";
@@ -281,5 +433,9 @@ export default {
 .boxshadow {
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
+.top-border {
+  border-top: 1px solid #333;
+  padding-top: 5px;
 }
 </style>
