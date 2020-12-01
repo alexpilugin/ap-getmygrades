@@ -24,4 +24,4 @@ $ npm run generate
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
 ## Screenshot
-![calculation.png](https://github.com/alexpilugin/ap-getmygrades/blob/main/git-images/calculation.png "calculation.png") 
+![calculation.png](https://github.com/alexpilugin/ap-getmygrades/blob/master/git-images/calculation.png "calculation.png") 
