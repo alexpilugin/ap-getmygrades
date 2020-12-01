@@ -121,7 +121,8 @@ export const actions = {
     if (devMode) console.log("Action: interface/startLoading");
     context.commit(EVENTS.SET_LOADING, true);
     axios
-      .get('https://demo-api.getmygrades.co.uk/cars')
+      //.get('https://demo-api.getmygrades.co.uk/cars')
+      .get('./api.json')
       .then(function (response) {
         context.commit(EVENTS.UPDATE_DATA, response.data);
         context.dispatch("stopLoading");

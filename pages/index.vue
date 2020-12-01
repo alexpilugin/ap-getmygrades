@@ -321,6 +321,8 @@ export default {
   },
   methods: {
     selectCar(index) {
+      //this.showOptions = undefined;
+      this.resetSelection();
       this.selectedCar == index + 1
         ? this.resetSelection()
         : (this.selectedCar = index + 1);
@@ -330,8 +332,6 @@ export default {
         this.selection.seats = this.cars[index].seats;
         this.selection.convertible = this.cars[index].convertible;
       }
-      //this.showOptions = undefined;
-      this.resetOptions();
     },
     resetSelection() {
       this.selectedCar = null;
